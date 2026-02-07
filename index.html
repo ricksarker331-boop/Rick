@@ -1,46 +1,310 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>💌 One question</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>💌 One question…</title>
   <style>
-    body{margin:0;height:100vh;display:grid;place-items:center;font-family:system-ui;background:#ffe6f1}
-    .card{background:#fff;padding:28px;border-radius:18px;box-shadow:0 12px 30px rgba(0,0,0,.12);text-align:center;width:min(520px,92vw)}
-    button{padding:12px 18px;border-radius:999px;border:0;font-size:16px;cursor:pointer}
-    .yes{background:#ff4d88;color:#fff}
-    .no{background:#eee}
-    #result{display:none;margin-top:14px}
+    :root{
+      --pink:#ff4d88;
+      --bg1:#ffe6f1;
+      --bg2:#ffffff;
+      --card:#ffffffcc;
+      --shadow: 0 18px 45px rgba(0,0,0,.10);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: radial-gradient(circle at top, var(--bg1), var(--bg2));
+      color:#151515;
+      padding: 18px;
+    }
+    .card{
+      width:min(720px, 94vw);
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      border: 1px solid #ffd1e6;
+      border-radius: 26px;
+      padding: 26px;
+      box-shadow: var(--shadow);
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+    }
+    h1{margin:0 0 10px; font-size:30px}
+    p{margin:0 0 18px; font-size:16px; opacity:.9}
+    .btns{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:16px}
+    button{
+      border:0;
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-size: 16px;
+      cursor:pointer;
+      box-shadow: 0 10px 18px rgba(0,0,0,.10);
+      transition: transform .15s ease, opacity .15s ease;
+      user-select:none;
+    }
+    .yes{background:var(--pink); color:#fff}
+    .no{background:#f1f1f1}
+    .meta{margin-top:16px; font-size:12px; opacity:.65}
+
+    /* Step panel (shows after each No click) */
+    .stepPanel{
+      margin-top:18px;
+      display:none;
+      text-align:left;
+      border-radius:18px;
+      border:1px solid #ffe0ee;
+      background:#fff;
+      overflow:hidden;
+      box-shadow: 0 10px 20px rgba(0,0,0,.06);
+    }
+    .stepGrid{
+      display:grid;
+      grid-template-columns: 220px 1fr;
+      gap:0;
+    }
+    .photo{
+      background:#000;
+      min-height:220px;
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+    }
+    .photo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .stepText{
+      padding:16px;
+    }
+    .stepTitle{
+      margin:0 0 8px;
+      font-size:18px;
+    }
+    .reason{
+      margin:0 0 10px;
+      line-height:1.45;
+      font-size:15px;
+    }
+    .hint{
+      margin:0;
+      font-size:13px;
+      opacity:.7;
+    }
+
+    /* Final screen */
+    .final{
+      display:none;
+      margin-top:18px;
+      padding:18px;
+      border-radius:18px;
+      border:1px solid #ffe0ee;
+      background:#fff;
+      text-align:center;
+    }
+    .final h2{margin:0 0 10px; font-size:24px}
+    .letter{
+      margin: 0 auto;
+      max-width: 560px;
+      text-align:left;
+      line-height:1.55;
+      font-size:15px;
+      background:#fff7fb;
+      border:1px solid #ffd6ea;
+      padding:14px;
+      border-radius:14px;
+    }
+    .flowerWrap{
+      margin: 14px auto 6px;
+      width: 120px; height: 120px;
+      display:grid; place-items:center;
+      animation: floaty 2.2s ease-in-out infinite;
+    }
+    @keyframes floaty{
+      0%,100%{transform: translateY(0)}
+      50%{transform: translateY(-8px)}
+    }
+    .small{
+      font-size:12px;
+      opacity:.65;
+      margin-top:10px;
+    }
+
+    /* Mobile */
+    @media (max-width:640px){
+      .stepGrid{grid-template-columns:1fr}
+      .photo{min-height:240px}
+      .stepText{padding:14px}
+    }
   </style>
 </head>
 <body>
   <div class="card">
-    <h1>Hey ❤️</h1>
-    <p>Will you be my Valentine?</p>
-    <div id="btns">
-      <button class="yes" id="yes">Yes 💘</button>
-      <button class="no" id="no">No 🙈</button>
+    <h1 id="headline">Hey ❤️</h1>
+    <p id="subhead">I made you something tiny but important…</p>
+    <h2 style="margin:0 0 6px;">Will you be my Valentine?</h2>
+
+    <div class="btns" id="btns">
+      <button class="yes" id="yesBtn">Yes 💘</button>
+      <button class="no" id="noBtn">No 🙈</button>
     </div>
-    <div id="result">
-      <h2>YAY!!! 🥰</h2>
-      <p>Text me “YES” right now 😄</p>
+
+    <!-- Shows after each No click -->
+    <div class="stepPanel" id="stepPanel">
+      <div class="stepGrid">
+        <div class="photo">
+          <img id="stepImg" src="" alt="Us" />
+        </div>
+        <div class="stepText">
+          <h3 class="stepTitle" id="stepTitle">Okay wait… just one thing 😭</h3>
+          <p class="reason" id="stepReason"></p>
+          <p class="hint" id="stepHint"></p>
+        </div>
+      </div>
     </div>
+
+    <!-- Final screen after Yes -->
+    <div class="final" id="final">
+      <h2>YAYYY 🥰💐</h2>
+      <div class="flowerWrap" aria-hidden="true">
+        <!-- Simple SVG flower -->
+        <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+          <circle cx="60" cy="60" r="10" fill="#FFD166"/>
+          <g>
+            <circle cx="60" cy="25" r="12" fill="#FF4D88"/>
+            <circle cx="85" cy="35" r="12" fill="#FF4D88"/>
+            <circle cx="95" cy="60" r="12" fill="#FF4D88"/>
+            <circle cx="85" cy="85" r="12" fill="#FF4D88"/>
+            <circle cx="60" cy="95" r="12" fill="#FF4D88"/>
+            <circle cx="35" cy="85" r="12" fill="#FF4D88"/>
+            <circle cx="25" cy="60" r="12" fill="#FF4D88"/>
+            <circle cx="35" cy="35" r="12" fill="#FF4D88"/>
+          </g>
+          <path d="M60 72 C60 90, 52 102, 45 112" stroke="#2EC4B6" stroke-width="6" stroke-linecap="round"/>
+          <path d="M58 86 C48 84, 38 90, 34 98" stroke="#2EC4B6" stroke-width="6" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <div class="letter" id="finalLetter">
+        <!-- Replace this with your final letter -->
+        <strong>My letter:</strong><br><br>
+        I know things have been a little off… and I don’t want you to feel alone in that.<br>
+        I just want one chance to make you smile properly this week.<br><br>
+        So… will you let me take you out / do something special with you? 💗
+      </div>
+      <div class="small">If you said yes… screenshot this and send it to me 😄</div>
+    </div>
+
+    <div class="meta">Tip: if images don’t load, check file names + capital letters in /assets</div>
   </div>
 
   <script>
-    const noBtn=document.getElementById("no");
-    const yesBtn=document.getElementById("yes");
-    const btns=document.getElementById("btns");
-    const result=document.getElementById("result");
+    // ✅ EDIT THIS SECTION ONLY ---------------------------------
 
-    noBtn.addEventListener("mouseenter", ()=>{
-      const x=(Math.random()*200)-100, y=(Math.random()*140)-70;
-      noBtn.style.transform=`translate(${x}px,${y}px)`;
+    // Put her name here (optional)
+    const HER_NAME = ""; // e.g. "Aanya"
+
+    // 5 steps for the "No" path (image + reason + tiny hint)
+    const noSteps = [
+      {
+        img: "assets/us1.jpg",
+        title: "No? 😭 Okay… just look at this…",
+        reason: "Reason #1 goes here (cute + short).",
+        hint: "You still have 4 more 'No's 😅"
+      },
+      {
+        img: "assets/us2.jpg",
+        title: "Wait wait… one more thing 🙈",
+        reason: "Reason #2 goes here.",
+        hint: "3 'No's left…"
+      },
+      {
+        img: "assets/us3.jpg",
+        title: "Okay I’m serious now 🥺",
+        reason: "Reason #3 goes here.",
+        hint: "2 'No's left…"
+      },
+      {
+        img: "assets/us4.jpg",
+        title: "You’re really testing me 😭",
+        reason: "Reason #4 goes here.",
+        hint: "Last 'No' after this…"
+      },
+      {
+        img: "assets/us5.jpg",
+        title: "Final offer 💗",
+        reason: "Reason #5 goes here (the strongest one).",
+        hint: "After this, the No button gives up 😄"
+      }
+    ];
+
+    // Optional: replace the final letter block in HTML (or edit the HTML directly)
+    // document.getElementById("finalLetter").innerHTML = `...`
+
+    // -----------------------------------------------------------
+
+    const headline = document.getElementById("headline");
+    const subhead  = document.getElementById("subhead");
+
+    if (HER_NAME && HER_NAME.trim().length > 0) {
+      headline.textContent = `Hey ${HER_NAME} ❤️`;
+      subhead.textContent = `I made this for you… just click once 😄`;
+    }
+
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const btns = document.getElementById("btns");
+
+    const stepPanel = document.getElementById("stepPanel");
+    const stepImg = document.getElementById("stepImg");
+    const stepTitle = document.getElementById("stepTitle");
+    const stepReason = document.getElementById("stepReason");
+    const stepHint = document.getElementById("stepHint");
+
+    const final = document.getElementById("final");
+
+    let noCount = 0;
+
+    function showNoStep(i){
+      const s = noSteps[i];
+      stepImg.src = s.img;
+      stepTitle.textContent = s.title;
+      stepReason.textContent = s.reason;
+      stepHint.textContent = s.hint;
+      stepPanel.style.display = "block";
+
+      // Shrink the No button each time (still clickable)
+      const scale = Math.max(0.35, 1 - (i+1) * 0.14); // 1.00 -> ~0.30
+      noBtn.style.transform = `scale(${scale})`;
+
+      // After 5 clicks, disable/hide No gently
+      if (i === noSteps.length - 1){
+        setTimeout(() => {
+          noBtn.style.opacity = "0";
+          noBtn.style.pointerEvents = "none";
+          noBtn.textContent = "ok fine 😅";
+        }, 250);
+      }
+    }
+
+    noBtn.addEventListener("click", () => {
+      if (noCount < noSteps.length){
+        showNoStep(noCount);
+        noCount++;
+      }
     });
 
-    yesBtn.addEventListener("click", ()=>{
-      btns.style.display="none";
-      result.style.display="block";
+    yesBtn.addEventListener("click", () => {
+      btns.style.display = "none";
+      stepPanel.style.display = "none";
+      final.style.display = "block";
     });
   </script>
 </body>
