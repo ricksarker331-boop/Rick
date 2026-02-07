@@ -4,44 +4,180 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>💌 One question…</title>
+
   <style>
-    :root{ --pink:#ff4d88; --bg1:#ffe6f1; --bg2:#fff; }
-    *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;display:grid;place-items:center;font-family:system-ui;background:radial-gradient(circle at top,var(--bg1),var(--bg2));padding:16px}
-    .card{width:min(820px,94vw);background:#ffffffcc;border:1px solid #ffd1e6;border-radius:26px;padding:26px;box-shadow:0 18px 45px rgba(0,0,0,.10);text-align:center}
-    .btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:14px}
-    button{border:0;padding:12px 18px;border-radius:999px;font-size:16px;cursor:pointer;box-shadow:0 10px 18px rgba(0,0,0,.10);transition:transform .15s ease,opacity .15s ease}
-    .yes{background:var(--pink);color:#fff}
-    .no{background:#f1f1f1}
-    .panel{display:none;margin-top:18px;background:#fff;border:1px solid #ffe0ee;border-radius:18px;overflow:hidden;box-shadow:0 10px 20px rgba(0,0,0,.06);text-align:left}
-    .photos{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px;background:#0f0f10}
-    .photos img{width:100%;height:260px;object-fit:cover;border-radius:12px;display:block;background:#222}
-    .panelInner{padding:16px}
-    .title{margin:0 0 8px;font-size:18px}
-    .text{margin:0;line-height:1.55;font-size:15px}
-    .hint{margin-top:10px;font-size:13px;opacity:.7}
-    .final{display:none;margin-top:18px;padding:18px;border-radius:18px;border:1px solid #ffe0ee;background:#fff;text-align:center}
-    .letter{margin:0 auto;max-width:600px;text-align:left;line-height:1.6;font-size:15px;background:#fff7fb;border:1px solid #ffd6ea;padding:14px;border-radius:14px}
-    .flowerWrap{margin:14px auto 6px;width:120px;height:120px;display:grid;place-items:center;animation:floaty 2.2s ease-in-out infinite}
-    @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-    @media (max-width:640px){.photos{grid-template-columns:1fr}.photos img{height:240px}}
+    :root{ --pink:#ff4d88; --bg1:#ffe6f1; --bg2:#ffffff; }
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: radial-gradient(circle at top, var(--bg1), var(--bg2));
+      padding: 16px;
+      color:#121212;
+    }
+
+    .card{
+      width:min(860px, 94vw);
+      background:#ffffffcc;
+      backdrop-filter: blur(10px);
+      border: 1px solid #ffd1e6;
+      border-radius: 26px;
+      padding: 26px;
+      box-shadow: 0 18px 45px rgba(0,0,0,.10);
+      text-align:center;
+      overflow:hidden;
+    }
+
+    h1{ margin:0 0 10px; font-size:30px; }
+    p{ margin:0 0 14px; font-size:16px; opacity:.9; }
+    h2{ margin:0 0 6px; }
+
+    .btns{
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    button{
+      border:0;
+      padding:12px 18px;
+      border-radius:999px;
+      font-size:16px;
+      cursor:pointer;
+      user-select:none;
+      box-shadow:0 10px 18px rgba(0,0,0,.10);
+      transition: transform .15s ease, opacity .15s ease;
+    }
+    .yes{ background: var(--pink); color:#fff; }
+    .no{ background:#f1f1f1; }
+
+    /* Panel shown after NO clicks */
+    .panel{
+      display:none;
+      margin-top:18px;
+      background:#fff;
+      border:1px solid #ffe0ee;
+      border-radius:18px;
+      overflow:hidden;
+      box-shadow:0 10px 20px rgba(0,0,0,.06);
+      text-align:left;
+    }
+
+    .photos{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      padding:14px;
+      background:#0f0f10;
+    }
+
+    .photos img{
+      width:100%;
+      height:260px;
+      object-fit:cover;
+      border-radius:12px;
+      display:block;
+      background:#222;
+    }
+
+    /* Hide the right image for steps 1–4 */
+    .hideRight #imgRight{ display:none; }
+    .hideRight .photos{ grid-template-columns: 1fr; }
+
+    .panelInner{ padding:16px; }
+    .title{ margin:0 0 8px; font-size:18px; }
+    .text{ margin:0; line-height:1.55; font-size:15px; }
+    .hint{ margin-top:10px; font-size:13px; opacity:.7; }
+
+    /* Final YES screen */
+    .final{
+      display:none;
+      margin-top:18px;
+      padding:18px;
+      border-radius:18px;
+      border:1px solid #ffe0ee;
+      background:#fff;
+      text-align:center;
+    }
+    .final h2{ margin:0 0 10px; font-size:24px; }
+
+    .letter{
+      margin:0 auto;
+      max-width:700px;
+      text-align:left;
+      line-height:1.65;
+      font-size:15px;
+      background:#fff7fb;
+      border:1px solid #ffd6ea;
+      padding:16px;
+      border-radius:14px;
+      white-space:pre-wrap;
+    }
+
+    .flowerWrap{
+      margin: 14px auto 6px;
+      width: 120px;
+      height: 120px;
+      display:grid;
+      place-items:center;
+      animation: floaty 2.2s ease-in-out infinite;
+    }
+    @keyframes floaty{
+      0%,100%{ transform: translateY(0); }
+      50%{ transform: translateY(-8px); }
+    }
+
+    .videoWrap{
+      margin: 14px auto 6px;
+      max-width: 760px;
+      border-radius: 16px;
+      overflow:hidden;
+      border: 1px solid #ffd6ea;
+      box-shadow: 0 12px 26px rgba(0,0,0,.08);
+      background:#000;
+    }
+    video{
+      width:100%;
+      height:auto;
+      display:block;
+      background:#000;
+    }
+
+    .small{
+      margin-top:10px;
+      font-size:12px;
+      opacity:.65;
+    }
+
+    @media (max-width:640px){
+      .photos{ grid-template-columns:1fr; }
+      .photos img{ height:240px; }
+    }
   </style>
 </head>
+
 <body>
   <div class="card">
     <h1>Hey ❤️</h1>
     <p>I made you something small… but it means a lot.</p>
-    <h2 style="margin:0 0 6px;">Will you be my Valentine?</h2>
+    <h2>Will you be my Valentine?</h2>
 
     <div class="btns" id="btns">
       <button class="yes" id="yesBtn">Yes 💘</button>
       <button class="no" id="noBtn">No 🙈</button>
     </div>
 
-    <div class="panel" id="panel">
+    <!-- NO-click panel -->
+    <div class="panel hideRight" id="panel">
       <div class="photos">
-        <img id="imgLeft" src="" alt="Me as a kid">
-        <img id="imgRight" src="" alt="Her as a kid">
+        <img id="imgLeft" src="" alt="photo">
+        <img id="imgRight" src="" alt="photo">
       </div>
       <div class="panelInner">
         <h3 class="title" id="panelTitle"></h3>
@@ -50,8 +186,10 @@
       </div>
     </div>
 
+    <!-- YES final screen -->
     <div class="final" id="final">
       <h2>YAYYY 🥰💐</h2>
+
       <div class="flowerWrap" aria-hidden="true">
         <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
           <circle cx="60" cy="60" r="10" fill="#FFD166"/>
@@ -69,70 +207,144 @@
           <path d="M58 86 C48 84, 38 90, 34 98" stroke="#2EC4B6" stroke-width="6" stroke-linecap="round"/>
         </svg>
       </div>
-      <div class="letter">
-        <strong>For you:</strong><br><br>
-        I know your mood’s been a little off… and I hate that I’m part of the reason.<br>
-        I just want one chance to make this week feel special for you.<br><br>
-        Will you let me make you smile properly? 💗
+
+      <!-- Video (upload assets/us.mp4) -->
+      <div class="videoWrap">
+        <video id="ourVideo" controls playsinline preload="metadata">
+          <source src="assets/us.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
       </div>
+
+      <!-- Your message (cleaned + beautiful formatting) -->
+      <div class="letter" id="finalLetter">I love you with all my heart.
+I don’t know how you’ve become so important to me.
+I don’t understand what you have inside you — and that’s the only thing I don’t want to understand,
+because I feel it… and it feels like the best thing in the world.
+
+I love your presence.
+
+Before you, I thought only music could give me that dopamine spike…
+but your laughter replaced it long ago — the first time I heard you laugh.
+It was so beautiful. So pretty.
+
+I’m blessed to have you as my girlfriend.
+
+Girlfriend… will you be my Valentine? ❤️</div>
+
+      <div class="small">If the video doesn’t play, make sure it’s named <b>assets/us.mp4</b>.</div>
+    </div>
+
+    <div class="small" style="margin-top:14px;">
+      If images don’t load, check exact filenames in <b>assets/</b> (capital letters matter).
     </div>
   </div>
 
   <script>
+    // ======= FILE NAMES (UPLOAD THESE INTO assets/) =======
+    // Single photo steps: assets/s1.jpg ... assets/s4.jpg
+    // Final double step: assets/me.jpg + assets/her.jpg
+    // Video: assets/us.mp4
+
     const steps = [
-      { left:"assets/me1.jpg", right:"assets/her1.jpg",
-        title:"This kid… and that kid… 🥺",
-        text:"This kid never thought that this girl would be his future girlfriend. And he’s genuinely happy he has her in his life.",
-        hint:"No clicks left after this: 4" },
-      { left:"assets/me2.jpg", right:"assets/her2.jpg",
-        title:"Look at us 😭",
-        text:"Somehow, out of everyone in the world… I got you. And I don’t take that lightly.",
-        hint:"No clicks left after this: 3" },
-      { left:"assets/me3.jpg", right:"assets/her3.jpg",
-        title:"I know you’re upset…",
-        text:"I’m not trying to win an argument. I’m trying to win your smile back—properly.",
-        hint:"No clicks left after this: 2" },
-      { left:"assets/me4.jpg", right:"assets/her4.jpg",
-        title:"Just one chance 💗",
-        text:"If I made you feel ignored or unimportant, I’m sorry. You matter to me more than you know.",
-        hint:"No clicks left after this: 1" },
-      { left:"assets/me5.jpg", right:"assets/her5.jpg",
-        title:"Final offer 😌",
-        text:"Let me make this Valentine week feel like us again—sweet, safe, and happy.",
-        hint:"That was the last No 😄" },
+      {
+        mode: "single",
+        left: "assets/s1.jpg",
+        title: "Okay wait… just one thing 🥺",
+        text: "I know it’s Valentine week… and I don’t want you feeling low because of me.",
+        hint: "No clicks left after this: 4"
+      },
+      {
+        mode: "single",
+        left: "assets/s2.jpg",
+        title: "Look at this 😭",
+        text: "I’m not trying to win anything… I’m just trying to bring your mood back.",
+        hint: "No clicks left after this: 3"
+      },
+      {
+        mode: "single",
+        left: "assets/s3.jpg",
+        title: "I’m serious 🥺",
+        text: "You matter to me. A lot. And I don’t want us feeling weird this week.",
+        hint: "No clicks left after this: 2"
+      },
+      {
+        mode: "single",
+        left: "assets/s4.jpg",
+        title: "Just one chance 💗",
+        text: "Let me do something sweet for you… something that makes you smile properly.",
+        hint: "No clicks left after this: 1"
+      },
+      {
+        mode: "double",
+        left: "assets/me.jpg",
+        right:"assets/her.jpg",
+        title: "This is my favourite part 🥺",
+        text: "This kid never thought that this girl would be his future girlfriend… and he’s genuinely happy to have her in his life.",
+        hint: "That was the last No 😄"
+      }
     ];
 
-    const btns=document.getElementById("btns");
-    const yesBtn=document.getElementById("yesBtn");
-    const noBtn=document.getElementById("noBtn");
-    const panel=document.getElementById("panel");
-    const imgLeft=document.getElementById("imgLeft");
-    const imgRight=document.getElementById("imgRight");
-    const panelTitle=document.getElementById("panelTitle");
-    const panelText=document.getElementById("panelText");
-    const panelHint=document.getElementById("panelHint");
-    const final=document.getElementById("final");
+    const btns = document.getElementById("btns");
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn  = document.getElementById("noBtn");
 
-    let i=0;
+    const panel = document.getElementById("panel");
+    const imgLeft = document.getElementById("imgLeft");
+    const imgRight = document.getElementById("imgRight");
+    const panelTitle = document.getElementById("panelTitle");
+    const panelText  = document.getElementById("panelText");
+    const panelHint  = document.getElementById("panelHint");
+
+    const final = document.getElementById("final");
+    const ourVideo = document.getElementById("ourVideo");
+
+    let i = 0;
+
     function renderStep(idx){
-      const s=steps[idx];
-      imgLeft.src=s.left;
-      imgRight.src=s.right;
-      panelTitle.textContent=s.title;
-      panelText.textContent=s.text;
-      panelHint.textContent=s.hint || "";
-      panel.style.display="block";
+      const s = steps[idx];
 
-      const scale=Math.max(0.35, 1-(idx+1)*0.14);
-      noBtn.style.transform=`scale(${scale})`;
+      if (s.mode === "single") {
+        panel.classList.add("hideRight");
+        imgLeft.src = s.left;
+        imgRight.src = "";
+      } else {
+        panel.classList.remove("hideRight");
+        imgLeft.src = s.left;
+        imgRight.src = s.right;
+      }
 
-      if(idx===steps.length-1){
-        setTimeout(()=>{ noBtn.style.opacity="0"; noBtn.style.pointerEvents="none"; }, 250);
+      panelTitle.textContent = s.title;
+      panelText.textContent  = s.text;
+      panelHint.textContent  = s.hint || "";
+      panel.style.display = "block";
+
+      const scale = Math.max(0.35, 1 - (idx + 1) * 0.14);
+      noBtn.style.transform = `scale(${scale})`;
+
+      if (idx === steps.length - 1) {
+        setTimeout(() => {
+          noBtn.style.opacity = "0";
+          noBtn.style.pointerEvents = "none";
+        }, 250);
       }
     }
 
-    noBtn.addEventListener("click", ()=>{ if(i<steps.length){ renderStep(i); i++; }});
-    yesBtn.addEventListener("click", ()=>{ btns.style.display="none"; panel.style.display="none"; final.style.display="block"; });
+    noBtn.addEventListener("click", () => {
+      if (i < steps.length) {
+        renderStep(i);
+        i++;
+      }
+    });
+
+    yesBtn.addEventListener("click", () => {
+      btns.style.display = "none";
+      panel.style.display = "none";
+      final.style.display = "block";
+
+      // Try to start video (some browsers require user to press play, so this is best-effort)
+      try { ourVideo.play(); } catch(e) {}
+    });
   </script>
 </body>
 </html>
