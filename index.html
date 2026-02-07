@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>💌 One question</title>
+  <style>
+    body{margin:0;height:100vh;display:grid;place-items:center;font-family:system-ui;background:#ffe6f1}
+    .card{background:#fff;padding:28px;border-radius:18px;box-shadow:0 12px 30px rgba(0,0,0,.12);text-align:center;width:min(520px,92vw)}
+    button{padding:12px 18px;border-radius:999px;border:0;font-size:16px;cursor:pointer}
+    .yes{background:#ff4d88;color:#fff}
+    .no{background:#eee}
+    #result{display:none;margin-top:14px}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Hey ❤️</h1>
+    <p>Will you be my Valentine?</p>
+    <div id="btns">
+      <button class="yes" id="yes">Yes 💘</button>
+      <button class="no" id="no">No 🙈</button>
+    </div>
+    <div id="result">
+      <h2>YAY!!! 🥰</h2>
+      <p>Text me “YES” right now 😄</p>
+    </div>
+  </div>
+
+  <script>
+    const noBtn=document.getElementById("no");
+    const yesBtn=document.getElementById("yes");
+    const btns=document.getElementById("btns");
+    const result=document.getElementById("result");
+
+    noBtn.addEventListener("mouseenter", ()=>{
+      const x=(Math.random()*200)-100, y=(Math.random()*140)-70;
+      noBtn.style.transform=`translate(${x}px,${y}px)`;
+    });
+
+    yesBtn.addEventListener("click", ()=>{
+      btns.style.display="none";
+      result.style.display="block";
+    });
+  </script>
+</body>
+</html>
